@@ -1,0 +1,20 @@
+How to install?
+---------------
+
+  - After you installed xCenter and Rexx Gauge, create a gauge widget. To
+    do so, click with MB2 on xCenter, select "add widget" and then select
+    "rexx gauge". The widget will be shown as an empity widget.
+  - Click with MB2 in this widget and select "properties".
+  - Copy and Paste the contents of BOINCMONITOR.WGT on the text box labeled
+    "Gauge script".
+  - Change the "Refresh rate" to 60000 ms and, as an option, set the "Gauge
+    width" as "Fixed" and with something like 55 pixels.
+  - There is no need to add anything at "Default Title" nor at "Double  Click"
+    action.
+  - In the "Gauge Script", look at the top of the script. Look for the text:
+
+/* Boinc5 Directory */
+boinc_path='D:\PROGRAMS\Boinc5'
+
+    Change it to your Boinc5 installation path.
+

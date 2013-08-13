@@ -1,0 +1,60 @@
+/* rexx gauge xcenter, boinc monitor, by c.brendes@gmx.net     */
+/* based on the classic seti monitor widget by kiwi@perelin.de */
+/* and daniel@caetano.eng.br                                   */
+/* based on the rexx WU monitor commandfile by ?               */
+
+/* Boinc5 Directory */
+boinc_path='D:\PROGRAMS\Boinc5'
+
+version = '0.0.1'
+
+if RxFuncQuery('SysLoadFuncs') then do
+   call RxFuncAdd 'SysLoadFuncs','RexxUtil','SysLoadFuncs'
+   call SysLoadFuncs
+   end
+
+if (UserDefinedColors = 0) then do
+   gauge.color1='A1E0A1'
+   gauge.color2='FFFF8C'
+   gauge.color3='BF4242'
+   end
+
+client_state=boinc_path'\bin\client_state.xml'
+init_data=boinc_path'\bin\slots\0\init_data.xml'
+lock_file=boinc_path'\bin\slots\0\boinc_lockfile'
+
+BoincIsRunning = boinc_running()
+
+if BoincIsRunning = 1 then do
+  gauge.3=0
+  gauge.text='NOT running'
+  end
+else do
+  CurrentProgress = getBoinc5Stat()
+  gauge.1=CurrentProgress
+  gauge.text=CurrentProgress'%'
+  end
+
+EXIT
+
+boinc_running:
+retval = 0
+if Stream(lock_file,'C', 'query exists') = '' then retval = 1
+return retval
+
+WUavailable:
+call SysFileSearch '<wu_name>', init_data, 'wu.'
+if wu.0 = 'WU.0' then retval = 0
+else do
+  parse var wu.1 with '<wu_name>' wuname '</wu_name>'
+  retval = left(wuname,32,)
+  end
+return retval
+
+getBoinc5Stat:
+call SysFileSearch '<fraction_done>', client_state, 'done.'
+if done.0 = 0 then perc='0'
+else parse var done.1 with "<fraction_done>" perc "</fraction_done>"
+perc = trunc(left(perc*100, 6),1)
+return perc
+
